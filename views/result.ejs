@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Profile Created</title>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
+    .card { background: white; padding: 25px; border-radius: 8px; max-width: 500px; margin: auto; }
+    h1 { color: #28a745; }
+    p { line-height: 1.6; }
+    .label { font-weight: bold; color: #555; }
+    .skill { background: #e9ecef; padding: 3px 8px; border-radius: 4px; margin: 2px; display: inline-block; }
+    .bio { background: #f8f9fa; border-left: 3px solid #28a745; padding: 10px; margin-top: 5px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Profile Success!</h1>
+    <h2>Welcome, <%= user.fullname %></h2>
+    
+    <p><span class="label">Email:</span> <%= user.email %></p>
+    
+    <% if (user.age) { %>
+      <p><span class="label">Age:</span> <%= user.age %></p>
+    <% } %>
+
+    <% if (user.city) { %>
+      <p><span class="label">City:</span> <%= user.city %></p>
+    <% } %>
+
+    <% if (user.gender) { %>
+      <p><span class="label">Gender:</span> <%= user.gender %></p>
+    <% } %>
+
+    <% if (user.skills) { %>
+      <p><span class="label">Skills:</span>
+        <% if (Array.isArray(user.skills)) { %>
+          <% user.skills.forEach(skill => { %>
+            <span class="skill"><%= skill %></span>
+          <% }); %>
+        <% } else { %>
+          <span class="skill"><%= user.skills %></span>
+        <% } %>
+      </p>
+    <% } %>
+
+    <% if (user.bio) { %>
+      <p><span class="label">Bio:</span></p>
+      <div class="bio"><%= user.bio %></div>
+    <% } %>
+
+    <br>
+    <a href="/">← Back to Form</a>
+  </div>
+</body>
+</html>
