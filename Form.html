@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile Form</title>
+  <style>
+    body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
+    form { background: white; padding: 25px; border-radius: 8px; max-width: 500px; margin: auto; }
+    input, select, textarea { width: 100%; padding: 10px; margin: 8px 0 5px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .radio-group, .check-group { margin-bottom: 15px; }
+    .radio-group label, .check-group label { margin-right: 15px; }
+    button { background: #28a745; color: white; padding: 12px; border: none; border-radius: 4px; cursor: pointer; width: 100%; margin-top: 10px; }
+    .error { color: red; font-size: 12px; margin-bottom: 10px; height: 15px; } /* Error साठी जागा */
+    .input-error { border-color: red; } /* चुकीच्या input ला लाल border */
+  </style>
+</head>
+<body>
+  <form id="profileForm" action="/submit" method="POST" onsubmit="return validateForm()">
+    <h2>Create Your Profile</h2>
+    
+    <label for="fullname">Full Name:</label>
+    <input type="text" id="fullname" name="fullname">
+    <div id="nameError" class="error"></div>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email">
+    <div id="emailError" class="error"></div>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" min="1" max="100">
+    <div id="ageError" class="error"></div>
+
+    <label for="city">City:</label>
+    <select id="city" name="city">
+      <option value="">--Select City--</option>
+      <option value="Pune">Pune</option>
+      <option value="Mumbai">Mumbai</option>
+      <option value="Delhi">Delhi</option>
+      <option value="Other">Other</option>
+    </select>
+    <div id="cityError" class="error"></div>
+
+    <label>Gender:</label>
+    <div class="radio-group">
+      <input type="radio" id="male" name="gender" value="Male"> <label for="male">Male</label>
+      <input type="radio" id="female" name="gender" value="Female"> <label for="female">Female</label>
+      <input type="radio" id="other" name="gender" value="Other"> <label for="other">Other</label>
+    </div>
+    <div id="genderError" class="error"></div>
+
+    <label>Skills: (Select at least 1)</label>
+    <div class="check-group">
+      <input type="checkbox" name="skills" value="HTML"> <label>HTML</label>
+      <input type="checkbox" name="skills" value="CSS"> <label>CSS</label>
+      <input type="checkbox" name="skills" value="JavaScript"> <label>JavaScript</label>
+      <input type="checkbox" name="skills" value="Node.js"> <label>Node.js</label>
+    </div>
+    <div id="skillsError" class="error"></div>
+
+    <label for="bio">Short Bio:</label>
+    <textarea id="bio" name="bio" rows="3"></textarea>
+
+    <button type="submit">Create Profile</button>
+  </form>
+
+  
+    function validateForm() {
+      let isValid = true;
+      document.querySelectorAll('.error').forEach(el => el.innerText = '');
+      document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+      const name = document.getElementById('fullname');
+      const email = document.getElementById('email');
+      const age = document.getElementById('age');
+      const city = document.getElementById('city');
+      const gender = document.querySelector('input[name="gender"]:checked');
+      const skills = document.querySelectorAll('input[name="skills"]:checked');
+
+
+      if (name.value.trim() === '') {
+        document.getElementById('nameError').innerText = 'Name takna jaruri aahe.';
+        name.classList.add('input-error');
+        isValid = false;
+      } else if (name.value.trim().length < 3) {
+        document.getElementById('nameError').innerText = 'Name kamaan 3 aksharache pahije.';
+        name.classList.add('input-error');
+        isValid = false;
+      }
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (email.value.trim() === '') {
+        document.getElementById('emailError').innerText = 'Email takna jaruri aahe.';
+        email.classList.add('input-error');
+        isValid = false;
+      } else if (!emailPattern.test(email.value)) {
+        document.getElementById('emailError').innerText = 'Email barobar taka.';
+        email.classList.add('input-error');
+        isValid = false;
+      }
+
+      // Age Validation
+      if (age.value === '') {
+        document.getElementById('ageError').innerText = 'Age takna jaruri aahe.';
+        age.classList.add('input-error');
+        isValid = false;
+      } else if (age.value < 18) {
+        document.getElementById('ageError').innerText = 'Age 18 peksha jast pahije.';
+        age.classList.add('input-error');
+        isValid = false;
+      }
+
+      if (city.value === '') {
+        document.getElementById('cityError').innerText = 'City select kara.';
+        city.classList.add('input-error');
+        isValid = false;
+      }
+
+      if (!gender) {
+        document.getElementById('genderError').innerText = 'Gender select kara.';
+        isValid = false;
+      }
+
+      if (skills.length === 0) {
+        document.getElementById('skillsError').innerText = 'Kamaan 1 skill select kara.';
+        isValid = false;
+      }
+
+      return isValid; 
+    }
+  
+</body>
+</html>
