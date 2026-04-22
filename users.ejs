@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - All Users</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; color: #333; }
+        
+        /* Section 1: Header / Navbar */
+        .header {
+            background: #1a237e;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header h1 { font-size: 24px; }
+        .header nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            padding: 8px 15px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        .header nav a:hover { background: rgba(255,255,255,0.2); }
+
+        .main-container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+        /* Section 2: Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #3f51b5;
+        }
+        .card h3 { color: #666; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
+        .card .number { font-size: 32px; font-weight: bold; color: #1a237e; }
+        .card.green { border-left-color: #4caf50; }
+        .card.orange { border-left-color: #ff9800; }
+
+        /* Section 3: Main Table */
+        .table-section {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .table-header h2 { color: #333; }
+        .btn-add {
+            background: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .btn-add:hover { background: #45a049; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #555; font-weight: 600; text-transform: uppercase; font-size: 12px; }
+        tr:hover { background-color: #f5f5f5; }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        .empty-state { text-align: center; padding: 40px; color: #888; }
+
+        /* Section 4: Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            color: #777;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECTION 1: HEADER -->
+    <header class="header">
+        <h1>Mayuri's Dashboard</h1>
+        <nav>
+            <a href="/">+ Add New User</a>
+            <a href="/users">All Users</a>
+        </nav>
+    </header>
+
+    <div class="main-container">
+
+        <!-- SECTION 2: STATS CARDS -->
+        <section class="stats-grid">
+            <div class="card">
+                <h3>Total Users</h3>
+                <p class="number"><%= allUsers.length %></p>
+            </div>
+            <div class="card green">
+                <h3>From Pune</h3>
+                <p class="number"><%= allUsers.filter(u => u.city === 'Pune').length %></p>
+            </div>
+            <div class="card orange">
+                <h3>Avg Age</h3>
+                <p class="number">
+                    <%= allUsers.length > 0 ? Math.round(allUsers.reduce((sum, u) => sum + parseInt(u.age), 0) / allUsers.length) : 0 %>
+                </p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: USERS TABLE -->
+        <section class="table-section">
+            <div class="table-header">
+                <h2>Registered Users List</h2>
+                <a href="/" class="btn-add">+ Add User</a>
+            </div>
+
+            <% if (allUsers.length === 0) { %>
+                <div class="empty-state">
+                    <h3>No users registered yet.</h3>
+                    <p>Click "Add User" to create your first user.</p>
+                </div>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Age</th>
+                            <th>City</th>
+                            <th>Skills</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% allUsers.forEach(user => { %>
+                            <tr>
+                                <td>#<%= user.id.toString().slice(-4) %></td>
+                                <td><strong><%= user.fullname %></strong></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.age %></td>
+                                <td><span class="badge"><%= user.city %></span></td>
+                                <td><%= user.skills %></td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } %>
+        </section>
+
+    </div>
+
+    <!-- SECTION 4: FOOTER -->
+    <footer class="footer">
+        <p>© 2026 Mayuri's First Server. Built with Node.js + Express + EJS.</p>
+    </footer>
+
+</body>
+</html>
